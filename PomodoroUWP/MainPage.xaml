@@ -5,9 +5,17 @@
     xmlns:local="using:PomodoroUWP"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="using:PomodoroUWP.ViewModels"
     mc:Ignorable="d">
+    <Page.Resources>
+        <vm:TimerViewModel x:Key="TimerViewModel"/>
+    </Page.Resources>
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" DataContext="{StaticResource TimerViewModel}">
+        <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Margin="149,208,0,0"
+                   TextWrapping="Wrap" Text="{Binding Display}" VerticalAlignment="Top"/>
+        <Button x:Name="button" Content="Start" HorizontalAlignment="Left" Margin="149,314,0,0"
+                VerticalAlignment="Top" />
 
     </Grid>
 </Page>
