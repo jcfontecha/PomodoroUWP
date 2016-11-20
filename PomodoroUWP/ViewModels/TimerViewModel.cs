@@ -49,7 +49,31 @@ namespace PomodoroUWP.ViewModels
             if (seconds > 0)
                 seconds--;
 
-            RunOnUIThread(() => { Display = seconds.ToString(); }, null);
+            RunOnUIThread(() => { Display = TimeToDisplayString(seconds); }, null);
+        }
+
+        private string TimeToDisplayString(int count)
+        {
+            int minutes = count / 60;
+            int seconds = count - minutes * 60;
+
+            return CeroPrecededDigit(minutes) + ":" + CeroPrecededDigit(seconds);
+        }
+
+        private string CeroPrecededDigit(int num)
+        {
+            if (num == 0)
+            {
+                return "00";
+            }
+            else if (num < 10)
+            {
+                return "0" + num.ToString();
+            }
+            else
+            {
+                return num.ToString();
+            }
         }
 
         private static async void RunOnUIThread(Action uiAction, Action callback)
