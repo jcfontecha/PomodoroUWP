@@ -3,16 +3,12 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using System.ServiceModel;
 
 namespace PomodoroUWP.ViewModels
 {
     public class TimerViewModel : INotifyPropertyChanged
     {
-        private Timer timer;
-        private int seconds = 1500;
+        private TimerService timerService;
 
         private string _display = "Hellooooo";
         public string Display
@@ -31,25 +27,17 @@ namespace PomodoroUWP.ViewModels
 
         public TimerViewModel()
         {
-            int timeout = 25000;
-            int interval = 1000;
-            TimerCallback callback = new TimerCallback(UpdateElapsedTime);
+            timerService = new TimerService(1500);
+            timerService.IntervalHandler = (time) => {
+                Display = TimeToDisplayString(time);
+            };
 
-            timer = new Timer(callback, null, timeout, interval);
             StartTimer();
         }
 
         public void StartTimer()
         {
-            timer.Change(0, 1000);
-        }
-
-        public void UpdateElapsedTime(object state)
-        {
-            if (seconds > 0)
-                seconds--;
-
-            RunOnUIThread(() => { Display = TimeToDisplayString(seconds); }, null);
+            timerService.StartTimer();
         }
 
         private string TimeToDisplayString(int count)
@@ -74,16 +62,6 @@ namespace PomodoroUWP.ViewModels
             {
                 return num.ToString();
             }
-        }
-
-        private static async void RunOnUIThread(Action uiAction, Action callback)
-        {
-            await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
-            {
-                uiAction?.Invoke();
-            });
-
-            callback?.Invoke();
         }
 
         #region INotifyPropertyChanged

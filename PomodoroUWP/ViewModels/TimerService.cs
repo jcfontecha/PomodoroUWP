@@ -11,48 +11,60 @@ namespace PomodoroUWP.ViewModels
     public class TimerService
     {
         private Timer timer;
-        public int Timeout { get; private set; } = 2500;
-        public int Interval { get; private set; } = 1000;
 
+        private int timeout = 1500;
         private int count = 0;
 
-        public Action<long> IntervalHandler { get; set; }
+        public int Timeout
+        {
+            get
+            {
+                return timeout; 
+            }
+            set
+            {
+                StopTimer();
+                timeout = value;
+                count = timeout;
+            }
+        }
+        
+        public int Interval { get; private set; } = 1000;
+
+        public Action<int> IntervalHandler { get; set; }
         public Action FinishedHandler { get; set; }
+
+        public bool IsRunning { get; set; } = false;
 
         public TimerService(int seconds)
         {
-            // convert seconds to milliseconds
-            Timeout = seconds * 1000;
+            Timeout = seconds;
             Interval = 1000;
-            count = Timeout;
         }
 
         public void StartTimer()
         {
-            StartTimer(Timeout);
-        }
-
-        public void StartTimer(int dueTime)
-        {
-            if (dueTime <= 0)
+            if (count <= 0)
             {
                 throw new Exception("Due Time must be greater than cero.");
             }
 
             TimerCallback callback = new TimerCallback(UpdateElapsedTime);
-            timer = new Timer(callback, null, dueTime, Interval);
+            timer = new Timer(callback, null, 0, Interval);
+            IsRunning = true;
         }
 
         public void PauseTimer()
         {
-            timer.Dispose();
+            timer?.Dispose();
+            IsRunning = false;
         }
 
         public void ResumeTimer()
         {
             if (count > 0)
             {
-                StartTimer(count);
+                StartTimer();
             }
             else
             {
@@ -62,11 +74,9 @@ namespace PomodoroUWP.ViewModels
 
         public void StopTimer()
         {
-            if (timer != null)
-            {
-                timer.Dispose();
-                count = 0;
-            }
+            timer?.Dispose();
+            count = 0;
+            IsRunning = false;
         }
 
         private void UpdateElapsedTime(object state)
