@@ -10,7 +10,7 @@ namespace PomodoroUWP.ViewModels
     {
         private TimerService timerService;
 
-        private string _display = "Hellooooo";
+        private string _display = "25:00";
         public string Display
         {
             get
@@ -29,39 +29,15 @@ namespace PomodoroUWP.ViewModels
         {
             timerService = new TimerService(1500);
             timerService.IntervalHandler = (time) => {
-                Display = TimeToDisplayString(time);
+                Display = timerService.TimeString();
             };
 
             StartTimer();
         }
-
+        
         public void StartTimer()
         {
             timerService.StartTimer();
-        }
-
-        private string TimeToDisplayString(int count)
-        {
-            int minutes = count / 60;
-            int seconds = count - minutes * 60;
-
-            return CeroPrecededDigit(minutes) + ":" + CeroPrecededDigit(seconds);
-        }
-
-        private string CeroPrecededDigit(int num)
-        {
-            if (num == 0)
-            {
-                return "00";
-            }
-            else if (num < 10)
-            {
-                return "0" + num.ToString();
-            }
-            else
-            {
-                return num.ToString();
-            }
         }
 
         #region INotifyPropertyChanged
