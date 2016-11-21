@@ -5,6 +5,8 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PomodoroUWP", "PomodoroUWP\PomodoroUWP.csproj", "{5C87CC82-3CAD-4596-BA5D-CABFD24A8EE8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PomodoroUnitTests", "PomodoroUnitTests\PomodoroUnitTests.csproj", "{B0F17186-755C-4948-9549-471DD6804236}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM
@@ -33,6 +35,24 @@ Global
 		{5C87CC82-3CAD-4596-BA5D-CABFD24A8EE8}.Release|x86.ActiveCfg = Release|x86
 		{5C87CC82-3CAD-4596-BA5D-CABFD24A8EE8}.Release|x86.Build.0 = Release|x86
 		{5C87CC82-3CAD-4596-BA5D-CABFD24A8EE8}.Release|x86.Deploy.0 = Release|x86
+		{B0F17186-755C-4948-9549-471DD6804236}.Debug|ARM.ActiveCfg = Debug|ARM
+		{B0F17186-755C-4948-9549-471DD6804236}.Debug|ARM.Build.0 = Debug|ARM
+		{B0F17186-755C-4948-9549-471DD6804236}.Debug|ARM.Deploy.0 = Debug|ARM
+		{B0F17186-755C-4948-9549-471DD6804236}.Debug|x64.ActiveCfg = Debug|x64
+		{B0F17186-755C-4948-9549-471DD6804236}.Debug|x64.Build.0 = Debug|x64
+		{B0F17186-755C-4948-9549-471DD6804236}.Debug|x64.Deploy.0 = Debug|x64
+		{B0F17186-755C-4948-9549-471DD6804236}.Debug|x86.ActiveCfg = Debug|x86
+		{B0F17186-755C-4948-9549-471DD6804236}.Debug|x86.Build.0 = Debug|x86
+		{B0F17186-755C-4948-9549-471DD6804236}.Debug|x86.Deploy.0 = Debug|x86
+		{B0F17186-755C-4948-9549-471DD6804236}.Release|ARM.ActiveCfg = Release|ARM
+		{B0F17186-755C-4948-9549-471DD6804236}.Release|ARM.Build.0 = Release|ARM
+		{B0F17186-755C-4948-9549-471DD6804236}.Release|ARM.Deploy.0 = Release|ARM
+		{B0F17186-755C-4948-9549-471DD6804236}.Release|x64.ActiveCfg = Release|x64
+		{B0F17186-755C-4948-9549-471DD6804236}.Release|x64.Build.0 = Release|x64
+		{B0F17186-755C-4948-9549-471DD6804236}.Release|x64.Deploy.0 = Release|x64
+		{B0F17186-755C-4948-9549-471DD6804236}.Release|x86.ActiveCfg = Release|x86
+		{B0F17186-755C-4948-9549-471DD6804236}.Release|x86.Build.0 = Release|x86
+		{B0F17186-755C-4948-9549-471DD6804236}.Release|x86.Deploy.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
