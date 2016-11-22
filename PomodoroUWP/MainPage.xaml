@@ -12,8 +12,9 @@
     </Page.Resources>
 
     <Grid Background="#FFE5A1A1" DataContext="{StaticResource TimerViewModel}">
-        <TextBlock x:Name="textBlock" Margin="15,100,15,0" TextAlignment="Center"
-                   TextWrapping="Wrap" Text="{Binding Display}" VerticalAlignment="Top" Foreground="White" FontSize="50" />
+        <TextBox Margin="15,25,15,0" VerticalAlignment="Top" FontSize="18" PlaceholderText="What are you working on?" BorderBrush="#007A7A7A" TextWrapping="Wrap" ></TextBox>
+        <TextBlock x:Name="textBlock" Margin="15,150,15,0" TextAlignment="Center"
+                   TextWrapping="Wrap" Text="{Binding Display}" VerticalAlignment="Top" Foreground="White" FontSize="56" FontFamily="Segoe UI Light" />
         <StackPanel Orientation="Vertical" Margin="15,0,15,0" VerticalAlignment="Bottom">
             <ProgressBar Height="10" Margin="0,0,0,15" VerticalAlignment="Bottom" Foreground="White" Value="{Binding Progress}" Maximum="1"/>
             <Button x:Name="button" Content="Start" HorizontalAlignment="Stretch" Margin="0,0,0,15"
