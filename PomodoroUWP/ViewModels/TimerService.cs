@@ -36,6 +36,21 @@ namespace PomodoroUWP.ViewModels
 
         public bool IsRunning { get; set; } = false;
 
+        public float Progress
+        {
+            get
+            {
+                if (count == 0)
+                {
+                    return 1.0f;
+                }
+                else
+                {
+                    return 1.0f - count / (float)Timeout;
+                }
+            }
+        }
+
         public TimerService(int seconds)
         {
             Timeout = seconds;

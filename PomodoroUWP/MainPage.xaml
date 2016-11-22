@@ -12,10 +12,13 @@
     </Page.Resources>
 
     <Grid Background="#FFE5A1A1" DataContext="{StaticResource TimerViewModel}">
-        <TextBlock x:Name="textBlock" Margin="0,200,0,0" HorizontalAlignment="Center"
-                   TextWrapping="Wrap" Text="{Binding Display}" VerticalAlignment="Top" Foreground="White" FontSize="24" Width="77"/>
-        <Button x:Name="button" Content="Start" HorizontalAlignment="Center" Margin="0,314,0,0"
-                VerticalAlignment="Top" Background="#66A90909" Command="{Binding StartTimerCommand}"/>
-
+        <TextBlock x:Name="textBlock" Margin="15,100,15,0" TextAlignment="Center"
+                   TextWrapping="Wrap" Text="{Binding Display}" VerticalAlignment="Top" Foreground="White" FontSize="50" />
+        <StackPanel Orientation="Vertical" Margin="15,0,15,0" VerticalAlignment="Bottom">
+            <ProgressBar Height="10" Margin="0,0,0,15" VerticalAlignment="Bottom" Foreground="White" Value="{Binding Progress}" Maximum="1"/>
+            <Button x:Name="button" Content="Start" HorizontalAlignment="Stretch" Margin="0,0,0,15"
+                VerticalAlignment="Bottom" Background="#66A90909" Command="{Binding StartTimerCommand}"/>
+            <Button x:Name="button2" Content="Skip" HorizontalAlignment="Stretch" Margin="0,0,0,15" Background="#66A90909"/>
+        </StackPanel>
     </Grid>
 </Page>

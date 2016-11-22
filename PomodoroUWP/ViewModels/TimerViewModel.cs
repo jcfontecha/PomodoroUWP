@@ -28,11 +28,26 @@ namespace PomodoroUWP.ViewModels
             }
         }
 
+        private float progress = 0.0f;
+        public float Progress
+        {
+            get
+            {
+                return progress;
+            }
+            set
+            {
+                progress = value;
+                OnPropertyChanged("Progress");
+            }
+        }
+
         public TimerViewModel()
         {
             timerService = new TimerService(1500);
             timerService.IntervalHandler = (time) => {
                 Display = timerService.TimeString();
+                Progress = timerService.Progress;
             };
 
             StartTimerCommand = new JFCommand<TimerViewModel>((vm) => true, (vm) => { StartTimer(); });
