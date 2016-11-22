@@ -1,14 +1,17 @@
-﻿using System;
+﻿using PomodoroUWP.ViewModels.Commands;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using System.Windows.Input;
 
 namespace PomodoroUWP.ViewModels
 {
     public class TimerViewModel : INotifyPropertyChanged
     {
         private TimerService timerService;
+        public ICommand StartTimerCommand { get; set; }
 
         private string _display = "25:00";
         public string Display
@@ -32,7 +35,7 @@ namespace PomodoroUWP.ViewModels
                 Display = timerService.TimeString();
             };
 
-            StartTimer();
+            StartTimerCommand = new JFCommand<TimerViewModel>((vm) => true, (vm) => { StartTimer(); });
         }
         
         public void StartTimer()
