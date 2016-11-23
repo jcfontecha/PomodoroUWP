@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Windows.UI.Xaml;
 
 namespace PomodoroUWP.ViewModels.Commands
 {
@@ -35,6 +36,22 @@ namespace PomodoroUWP.ViewModels.Commands
         public void Execute(object parameter)
         {
             action?.Invoke((T)parameter);
+        }
+
+        public void RaiseCanExecuteChanged()
+        {
+            if (CanExecuteChanged != null)
+            {
+                RunOnUIThread(() => { CanExecuteChanged(this, EventArgs.Empty); });
+            }
+        }
+
+        private async void RunOnUIThread(Action action)
+        {
+            await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            {
+                action?.Invoke();
+            });
         }
     }
 }

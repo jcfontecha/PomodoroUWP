@@ -6,11 +6,36 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace PomodoroUWP.ViewModels
+namespace PomodoroUWP.Models
 {
+    public enum TimerServiceState
+    {
+        Stopped, Running, Paused
+    }
+
+    public class TimerEventArgs : EventArgs
+    {
+        public float Progress { get; set; }
+        public TimerServiceState State { get; set; }
+        public string Display { get; set; }
+
+        public TimerEventArgs(TimerServiceState state, float progress, string display)
+        {
+            State = state;
+            Progress = progress;
+            Display = display;
+        }
+    }
+
+    public delegate void TimerEventHandler(object sender, TimerEventArgs e);
+
     public class TimerService
     {
         private Timer timer;
+
+        public event TimerEventHandler StateChanged;
+        public event TimerEventHandler IntervalComplete;
+        public event TimerEventHandler TimerComplete;
 
         private int timeout = 1500;
         private int count = 0;
@@ -31,10 +56,19 @@ namespace PomodoroUWP.ViewModels
         
         public int Interval { get; private set; } = 1000;
 
-        public Action<int> IntervalHandler { get; set; }
-        public Action FinishedHandler { get; set; }
-
-        public bool IsRunning { get; set; } = false;
+        private TimerServiceState state = TimerServiceState.Stopped;
+        public TimerServiceState State
+        {
+            get
+            {
+                return state;
+            }
+            set
+            {
+                state = value;
+                OnStateChanged(new TimerEventArgs(state, Progress, TimeString()));
+            }
+        }
 
         public float Progress
         {
@@ -64,34 +98,25 @@ namespace PomodoroUWP.ViewModels
                 throw new Exception("Due Time must be greater than cero.");
             }
 
-            TimerCallback callback = new TimerCallback(UpdateElapsedTime);
-            timer = new Timer(callback, null, 0, Interval);
-            IsRunning = true;
+            if (State != TimerServiceState.Running)
+            {
+                TimerCallback callback = new TimerCallback(UpdateElapsedTime);
+                timer = new Timer(callback, null, 1000, Interval);
+                State = TimerServiceState.Running;
+            }
         }
 
         public void PauseTimer()
         {
             timer?.Dispose();
-            IsRunning = false;
-        }
-
-        public void ResumeTimer()
-        {
-            if (count > 0)
-            {
-                StartTimer();
-            }
-            else
-            {
-                throw new Exception("Timer cannot resume since it isn't paused.");
-            }
+            State = TimerServiceState.Paused;
         }
 
         public void StopTimer()
         {
             timer?.Dispose();
-            count = 0;
-            IsRunning = false;
+            count = Timeout;
+            State = TimerServiceState.Stopped;
         }
 
         public string TimeString()
@@ -104,13 +129,33 @@ namespace PomodoroUWP.ViewModels
             if (count > 0)
             {
                 count--;
-
-                RunOnUIThread(() => { IntervalHandler?.Invoke(count); });
+                RunOnUIThread(() => {
+                    OnIntervalComplete(new TimerEventArgs(State, Progress, TimeString()));
+                });
             }
             else
             {
-                RunOnUIThread(() => { FinishedHandler?.Invoke(); });
+                RunOnUIThread(() => {
+                    OnTimerComplete(new TimerEventArgs(State, Progress, TimeString()));
+                });
+
+                StopTimer();
             }
+        }
+
+        protected virtual void OnStateChanged(TimerEventArgs e)
+        {
+            StateChanged?.Invoke(this, e);
+        }
+
+        protected virtual void OnIntervalComplete(TimerEventArgs e)
+        {
+            IntervalComplete?.Invoke(this, e);
+        }
+
+        protected virtual void OnTimerComplete(TimerEventArgs e)
+        {
+            TimerComplete?.Invoke(this, e);
         }
 
         private async void RunOnUIThread(Action action)

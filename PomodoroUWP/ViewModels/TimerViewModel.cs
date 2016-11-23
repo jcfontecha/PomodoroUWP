@@ -5,13 +5,29 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Windows.Input;
+using PomodoroUWP.Models;
 
 namespace PomodoroUWP.ViewModels
 {
     public class TimerViewModel : INotifyPropertyChanged
     {
         private TimerService timerService;
-        public ICommand StartTimerCommand { get; set; }
+        public ICommand ToggleStartCommand { get; set; }
+        public ICommand CancelTimerCommand { get; set; }
+
+        private string commandLabel = "Start";
+        public string CommandLabel
+        {
+            get
+            {
+                return commandLabel;
+            }
+            set
+            {
+                commandLabel = value;
+                OnPropertyChanged("CommandLabel");
+            }
+        }
 
         private string _display = "25:00";
         public string Display
@@ -45,17 +61,61 @@ namespace PomodoroUWP.ViewModels
         public TimerViewModel()
         {
             timerService = new TimerService(1500);
-            timerService.IntervalHandler = (time) => {
-                Display = timerService.TimeString();
-                Progress = timerService.Progress;
-            };
 
-            StartTimerCommand = new JFCommand<TimerViewModel>((vm) => true, (vm) => { StartTimer(); });
+            timerService.IntervalComplete += OnIntervalComplete;
+            timerService.StateChanged += OnTimerStateChanged;
+
+            ToggleStartCommand = new JFCommand<TimerViewModel>((vm) => true, (vm) => { ToggleTimer(); });
+            CancelTimerCommand = new JFCommand<TimerViewModel>(
+                (vm) => timerService.State != TimerServiceState.Stopped,
+                (vm) => { StopTimer(); }
+                );
         }
         
-        public void StartTimer()
+        public void ToggleTimer()
         {
-            timerService.StartTimer();
+            if (timerService.State != TimerServiceState.Running)
+            {
+                timerService.StartTimer();
+            }
+            else
+            {
+                timerService.PauseTimer();
+            }
+        }
+
+        public void StopTimer()
+        {
+            timerService.StopTimer();
+        }
+
+        public void OnIntervalComplete(object sender, TimerEventArgs e)
+        {
+            Display = e.Display;
+            Progress = e.Progress;
+        }
+
+        public void OnTimerStateChanged(object sender, TimerEventArgs e)
+        {
+            switch (timerService.State)
+            {
+                case TimerServiceState.Stopped:
+                    CommandLabel = "Start";
+                    break;
+                case TimerServiceState.Running:
+                    CommandLabel = "Pause";
+                    break;
+                case TimerServiceState.Paused:
+                    CommandLabel = "Resume";
+                    break;
+                default:
+                    break;
+            }
+
+            Display = timerService.TimeString();
+            Progress = timerService.Progress;
+
+            ((JFCommand<TimerViewModel>)CancelTimerCommand).RaiseCanExecuteChanged();
         }
 
         #region INotifyPropertyChanged

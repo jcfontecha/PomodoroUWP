@@ -35,17 +35,6 @@ namespace PomodoroUWP.Views
             ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
             ApplicationView.PreferredLaunchViewSize = new Size { Height = 450, Width = 300 };
 
-            if (ApiInformation.IsTypePresent("Windows.UI.ViewManagement.ApplicationView"))
-            {
-                var titleBar = ApplicationView.GetForCurrentView().TitleBar;
-                if (titleBar != null)
-                {
-                    titleBar.ButtonBackgroundColor = GetColorFromHex("#E5A1A1");
-                    //titleBar.ButtonForegroundColor = Colors.White;
-                    titleBar.BackgroundColor = GetColorFromHex("#E5A1A1");
-                    //titleBar.ForegroundColor = Colors.White;
-                }
-            }
         }
 
         private Color GetColorFromHex(string hexString)

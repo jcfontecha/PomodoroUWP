@@ -11,15 +11,16 @@
         <vm:TimerViewModel x:Key="TimerViewModel"/>
     </Page.Resources>
 
-    <Grid Background="#FFE5A1A1" DataContext="{StaticResource TimerViewModel}">
-        <TextBox Margin="15,25,15,0" VerticalAlignment="Top" FontSize="18" PlaceholderText="What are you working on?" BorderBrush="#007A7A7A" TextWrapping="Wrap" ></TextBox>
+    <Grid Background="White" DataContext="{StaticResource TimerViewModel}">
+        <TextBox Margin="15,25,15,0" VerticalAlignment="Top" FontSize="16" PlaceholderText="What are you working on?" BorderBrush="#007A7A7A" TextWrapping="Wrap" ></TextBox>
         <TextBlock x:Name="textBlock" Margin="15,150,15,0" TextAlignment="Center"
-                   TextWrapping="Wrap" Text="{Binding Display}" VerticalAlignment="Top" Foreground="White" FontSize="56" FontFamily="Segoe UI Light" />
+                   TextWrapping="Wrap" Text="{Binding Display}" VerticalAlignment="Top" FontSize="56" FontFamily="Segoe UI Light" />
         <StackPanel Orientation="Vertical" Margin="15,0,15,0" VerticalAlignment="Bottom">
-            <ProgressBar Height="10" Margin="0,0,0,15" VerticalAlignment="Bottom" Foreground="White" Value="{Binding Progress}" Maximum="1"/>
-            <Button x:Name="button" Content="Start" HorizontalAlignment="Stretch" Margin="0,0,0,15"
-                VerticalAlignment="Bottom" Background="#66A90909" Command="{Binding StartTimerCommand}"/>
-            <Button x:Name="button2" Content="Skip" HorizontalAlignment="Stretch" Margin="0,0,0,15" Background="#66A90909"/>
+            <ProgressBar Height="10" Margin="0,0,0,15" VerticalAlignment="Bottom" Value="{Binding Progress}" Maximum="1"/>
+            <Button x:Name="button" Content="{Binding CommandLabel}" HorizontalAlignment="Stretch" Margin="0,0,0,15"
+                VerticalAlignment="Bottom" Command="{Binding ToggleStartCommand}"/>
+            <Button x:Name="button2" Content="Cancel" HorizontalAlignment="Stretch" Margin="0,0,0,15"
+                    Command="{Binding CancelTimerCommand}"/>
         </StackPanel>
     </Grid>
 </Page>
