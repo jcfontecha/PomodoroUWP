@@ -99,6 +99,7 @@
       <DependentUpon>AppShell.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\NavMenuListView.cs" />
+    <Compile Include="Models\Pomodoro.cs" />
     <Compile Include="Models\PomodoroSession.cs" />
     <Compile Include="NavMenuItem.cs" />
     <Compile Include="Views\MainPage.xaml.cs">

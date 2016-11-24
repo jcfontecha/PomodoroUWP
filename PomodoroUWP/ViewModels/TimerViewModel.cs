@@ -11,7 +11,7 @@ namespace PomodoroUWP.ViewModels
 {
     public class TimerViewModel : INotifyPropertyChanged
     {
-        private TimerService timerService;
+        private Pomodoro Pomodoro { get; set; }
         public ICommand ToggleStartCommand { get; set; }
         public ICommand CancelTimerCommand { get; set; }
 
@@ -64,35 +64,34 @@ namespace PomodoroUWP.ViewModels
         {
             CurrentSession = new PomodoroSession();
 
-            timerService = new TimerService(500);
-            Display = timerService.TimeString();
+            Pomodoro = new Pomodoro(10, 5);
+            Display = Pomodoro.TimeString();
 
-            timerService.IntervalComplete += OnIntervalComplete;
-            timerService.StateChanged += OnTimerStateChanged;
-            timerService.TimerComplete += OnTimerComplete;
+            Pomodoro.IntervalComplete += OnIntervalComplete;
+            Pomodoro.StateChanged += OnTimerStateChanged;
 
             ToggleStartCommand = new JFCommand<TimerViewModel>((vm) => true, (vm) => { ToggleTimer(); });
             CancelTimerCommand = new JFCommand<TimerViewModel>(
-                (vm) => timerService.State != TimerServiceState.Stopped,
+                (vm) => Pomodoro.State != TimerServiceState.Stopped,
                 (vm) => { StopTimer(); }
                 );
         }
 
         public void ToggleTimer()
         {
-            if (timerService.State != TimerServiceState.Running)
+            if (Pomodoro.State != TimerServiceState.Running)
             {
-                timerService.StartTimer();
+                Pomodoro.StartTimer();
             }
             else
             {
-                timerService.PauseTimer();
+                Pomodoro.PauseTimer();
             }
         }
 
         public void StopTimer()
         {
-            timerService.StopTimer();
+            Pomodoro.StopTimer();
         }
 
         public void OnIntervalComplete(object sender, TimerEventArgs e)
@@ -103,7 +102,7 @@ namespace PomodoroUWP.ViewModels
 
         public void OnTimerStateChanged(object sender, TimerEventArgs e)
         {
-            switch (timerService.State)
+            switch (Pomodoro.State)
             {
                 case TimerServiceState.Stopped:
                     CommandLabel = "Start";
@@ -118,8 +117,8 @@ namespace PomodoroUWP.ViewModels
                     break;
             }
 
-            Display = timerService.TimeString();
-            Progress = timerService.Progress;
+            Display = Pomodoro.TimeString();
+            Progress = Pomodoro.Progress;
 
             ((JFCommand<TimerViewModel>)CancelTimerCommand).RaiseCanExecuteChanged();
         }

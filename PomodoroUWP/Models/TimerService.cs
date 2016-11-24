@@ -36,24 +36,10 @@ namespace PomodoroUWP.Models
         public event TimerEventHandler StateChanged;
         public event TimerEventHandler IntervalComplete;
         public event TimerEventHandler TimerComplete;
-
-        private int timeout = 1500;
-        private int count = 0;
-
-        public int Timeout
-        {
-            get
-            {
-                return timeout; 
-            }
-            set
-            {
-                StopTimer();
-                timeout = value;
-                count = timeout;
-            }
-        }
         
+        private int currentSecond = 0; // count will be decreased every second
+
+        public int DueTime { get; set; } = 1500;
         public int Interval { get; private set; } = 1000;
 
         private TimerServiceState state = TimerServiceState.Stopped;
@@ -66,7 +52,9 @@ namespace PomodoroUWP.Models
             set
             {
                 state = value;
-                OnStateChanged(new TimerEventArgs(state, Progress, TimeString()));
+
+                // Thread-safely raise event
+                RunOnUIThread(() => OnStateChanged(new TimerEventArgs(state, Progress, TimeString())) );
             }
         }
 
@@ -74,26 +62,26 @@ namespace PomodoroUWP.Models
         {
             get
             {
-                if (count == 0)
+                if (currentSecond == 0)
                 {
                     return 1.0f;
                 }
                 else
                 {
-                    return 1.0f - count / (float)Timeout;
+                    return 1.0f - currentSecond / (float)DueTime;
                 }
             }
         }
 
         public TimerService(int seconds)
         {
-            Timeout = seconds;
-            Interval = 1000;
+            DueTime = seconds;
+            currentSecond = seconds;
         }
 
         public void StartTimer()
         {
-            if (count <= 0)
+            if (currentSecond <= 0)
             {
                 throw new Exception("Due Time must be greater than cero.");
             }
@@ -115,20 +103,28 @@ namespace PomodoroUWP.Models
         public void StopTimer()
         {
             timer?.Dispose();
-            count = Timeout;
             State = TimerServiceState.Stopped;
+        }
+
+        public void ResetTimer()
+        {
+            currentSecond = DueTime;
+
+            // stopping the timer doesn't harm and servers to 
+            // notify on the updated currentSecond (via StateChanged)
+            StopTimer();
         }
 
         public string TimeString()
         {
-            return TimeToDisplayString(count);
+            return TimeToDisplayString(currentSecond);
         }
 
         private void UpdateElapsedTime(object state)
         {
-            if (count > 0)
+            if (currentSecond > 0)
             {
-                count--;
+                currentSecond--;
                 RunOnUIThread(() => {
                     OnIntervalComplete(new TimerEventArgs(State, Progress, TimeString()));
                 });
@@ -136,10 +132,9 @@ namespace PomodoroUWP.Models
             else
             {
                 RunOnUIThread(() => {
+                    StopTimer();
                     OnTimerComplete(new TimerEventArgs(State, Progress, TimeString()));
                 });
-
-                StopTimer();
             }
         }
 
