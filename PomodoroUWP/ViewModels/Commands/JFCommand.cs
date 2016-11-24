@@ -8,14 +8,14 @@ using Windows.UI.Xaml;
 
 namespace PomodoroUWP.ViewModels.Commands
 {
-    class JFCommand<T> : ICommand
+    class JFCommand : ICommand
     {
-        public Predicate<T> canExecute { get; set; }
-        public Action<T> action;
+        public Predicate<object> canExecute { get; set; }
+        public Action<object> action;
 
         public event EventHandler CanExecuteChanged;
 
-        public JFCommand(Predicate<T> canExecute, Action<T> action)
+        public JFCommand(Predicate<object> canExecute, Action<object> action)
         {
             this.canExecute = canExecute;
             this.action = action;
@@ -25,7 +25,7 @@ namespace PomodoroUWP.ViewModels.Commands
         {
             if (canExecute != null)
             {
-                return canExecute((T)parameter);
+                return canExecute(parameter);
             }
             else
             {
@@ -35,7 +35,7 @@ namespace PomodoroUWP.ViewModels.Commands
 
         public void Execute(object parameter)
         {
-            action?.Invoke((T)parameter);
+            action?.Invoke(parameter);
         }
 
         public void RaiseCanExecuteChanged()
