@@ -12,7 +12,8 @@
     </Page.Resources>
 
     <Grid Background="White" DataContext="{StaticResource TimerViewModel}">
-        <TextBox Margin="15,25,15,0" VerticalAlignment="Top" FontSize="16" PlaceholderText="What are you working on?" BorderBrush="#007A7A7A" TextWrapping="Wrap" ></TextBox>
+        <TextBox Margin="15,25,15,0" VerticalAlignment="Top" FontSize="16" PlaceholderText="What are you working on?"
+                 TextWrapping="Wrap" Text="{Binding CurrentSession.Title, Mode=TwoWay}"></TextBox>
         <TextBlock x:Name="textBlock" Margin="15,150,15,0" TextAlignment="Center"
                    TextWrapping="Wrap" Text="{Binding Display}" VerticalAlignment="Top" FontSize="56" FontFamily="Segoe UI Light" />
         <StackPanel Orientation="Vertical" Margin="15,0,15,0" VerticalAlignment="Bottom">

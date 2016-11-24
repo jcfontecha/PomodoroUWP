@@ -58,12 +58,18 @@ namespace PomodoroUWP.ViewModels
             }
         }
 
+        public PomodoroSession CurrentSession { get; set; }
+
         public TimerViewModel()
         {
-            timerService = new TimerService(1500);
+            CurrentSession = new PomodoroSession();
+
+            timerService = new TimerService(500);
+            Display = timerService.TimeString();
 
             timerService.IntervalComplete += OnIntervalComplete;
             timerService.StateChanged += OnTimerStateChanged;
+            timerService.TimerComplete += OnTimerComplete;
 
             ToggleStartCommand = new JFCommand<TimerViewModel>((vm) => true, (vm) => { ToggleTimer(); });
             CancelTimerCommand = new JFCommand<TimerViewModel>(
@@ -71,7 +77,7 @@ namespace PomodoroUWP.ViewModels
                 (vm) => { StopTimer(); }
                 );
         }
-        
+
         public void ToggleTimer()
         {
             if (timerService.State != TimerServiceState.Running)
@@ -116,6 +122,13 @@ namespace PomodoroUWP.ViewModels
             Progress = timerService.Progress;
 
             ((JFCommand<TimerViewModel>)CancelTimerCommand).RaiseCanExecuteChanged();
+        }
+
+        private void OnTimerComplete(object sender, TimerEventArgs e)
+        {
+            // Should save the pomodoro session to some sort of 
+            // data persistance
+            throw new NotImplementedException();
         }
 
         #region INotifyPropertyChanged
