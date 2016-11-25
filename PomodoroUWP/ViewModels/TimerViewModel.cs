@@ -60,6 +60,22 @@ namespace PomodoroUWP.ViewModels
 
         public PomodoroSession CurrentSession { get; set; }
 
+        public bool IsInWorkMode
+        {
+            get
+            {
+                return Pomodoro.Mode == PomodoroMode.Work;
+            }
+        }
+
+        public bool IsInBreakMode
+        {
+            get
+            {
+                return Pomodoro.Mode == PomodoroMode.Break;
+            }
+        }
+
         public TimerViewModel()
         {
             CurrentSession = new PomodoroSession();
@@ -69,6 +85,7 @@ namespace PomodoroUWP.ViewModels
 
             Pomodoro.IntervalComplete += OnIntervalComplete;
             Pomodoro.StateChanged += OnTimerStateChanged;
+            Pomodoro.ModeChanged += OnPomodoroChanged;
 
             ToggleStartCommand = new JFCommand(
                 _ => true,
@@ -132,6 +149,14 @@ namespace PomodoroUWP.ViewModels
             // Should save the pomodoro session to some sort of 
             // data persistance
             throw new NotImplementedException();
+        }
+
+
+        private void OnPomodoroChanged(object sender, PomodoroEventArgs e)
+        {
+            // let whatever UI know that we are in different mode
+            OnPropertyChanged("IsInWorkMode");
+            OnPropertyChanged("IsInBreakMode");
         }
 
         #region INotifyPropertyChanged
