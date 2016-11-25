@@ -1,17 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace PomodoroUWP.Models
+﻿namespace PomodoroUWP.Models
 {
     public enum PomodoroMode
     {
         Work, Break
     }
 
-    class Pomodoro : TimerService
+    public class PomodoroEventArgs
+    {
+        public PomodoroMode Mode { get; set; }
+
+        public PomodoroEventArgs(PomodoroMode mode)
+        {
+            Mode = mode;
+        }
+    }
+
+    public delegate void PomodoroEventHandler(object sender, PomodoroEventArgs e);
+
+    public class Pomodoro : TimerService
     {
         private PomodoroMode mode = PomodoroMode.Work;
         public PomodoroMode Mode
@@ -37,8 +43,13 @@ namespace PomodoroUWP.Models
                 }
 
                 ResetTimer();
+
+                // raise the event!
+                OnModeChanged(new PomodoroEventArgs(mode));
             }
         }
+
+        public event PomodoroEventHandler ModeChanged;
 
         public int WorkDuration { get; set; } = 1500;
         public int BreakDuration { get; set; } = 300;
@@ -53,8 +64,6 @@ namespace PomodoroUWP.Models
 
         protected override void OnTimerComplete(TimerEventArgs e)
         {
-            base.OnTimerComplete(e);
-
             if (AutoAdvance)
             {
                 if (Mode == PomodoroMode.Work)
@@ -66,6 +75,13 @@ namespace PomodoroUWP.Models
                     Mode = PomodoroMode.Work;
                 }
             }
+
+            base.OnTimerComplete(e);
+        }
+
+        protected virtual void OnModeChanged(PomodoroEventArgs e)
+        {
+            ModeChanged?.Invoke(this, e);
         }
     }
 }
