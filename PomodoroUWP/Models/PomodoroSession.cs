@@ -37,20 +37,6 @@ namespace PomodoroUWP.Models
             }
         }
 
-        private float progress;
-        public float Progress
-        {
-            get
-            {
-                return progress;
-            }
-            set
-            {
-                progress = value;
-                OnPropertyChanged("Progress");
-            }
-        }
-
         private DateTime date;
         public DateTime Date
         {
@@ -63,6 +49,17 @@ namespace PomodoroUWP.Models
                 date = value;
                 OnPropertyChanged("Date");
             }
+        }
+
+        public string Serialize()
+        {
+            string result = "";
+
+            result += Title + ",";
+            result += Date.ToString() + ",";
+            result += Duration.ToString();
+
+            return result;
         }
 
         #region INotifyPropertyChanged

@@ -6,6 +6,8 @@ using System.Linq;
 using System.Text;
 using System.Windows.Input;
 using PomodoroUWP.Models;
+using Windows.Storage;
+using System.Threading.Tasks;
 
 namespace PomodoroUWP.ViewModels
 {
@@ -148,9 +150,23 @@ namespace PomodoroUWP.ViewModels
         {
             // Should save the pomodoro session to some sort of 
             // data persistance
-            throw new NotImplementedException();
+
+            SavePomodoroSessionAsync();
         }
 
+        private async void SavePomodoroSessionAsync()
+        {
+            StorageFile file = await GetSaveFileAsync();
+
+            // TODO: Serialize Pomodoro here.
+            await FileIO.AppendTextAsync(file, CurrentSession.Serialize());
+        }
+
+        public static async Task<StorageFile> GetSaveFileAsync()
+        {
+            StorageFolder localFolder = ApplicationData.Current.LocalFolder;
+            return await localFolder.CreateFileAsync("data.csv", CreationCollisionOption.OpenIfExists);
+        }
 
         private void OnPomodoroChanged(object sender, PomodoroEventArgs e)
         {
