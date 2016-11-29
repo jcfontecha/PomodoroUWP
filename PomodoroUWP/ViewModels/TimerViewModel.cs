@@ -6,12 +6,14 @@ using System.Linq;
 using System.Text;
 using System.Windows.Input;
 using PomodoroUWP.Models;
+using Windows.Storage;
+using System.Threading.Tasks;
 
 namespace PomodoroUWP.ViewModels
 {
     public class TimerViewModel : INotifyPropertyChanged
     {
-        private TimerService timerService;
+        private Pomodoro Pomodoro { get; set; }
         public ICommand ToggleStartCommand { get; set; }
         public ICommand CancelTimerCommand { get; set; }
 
@@ -60,39 +62,59 @@ namespace PomodoroUWP.ViewModels
 
         public PomodoroSession CurrentSession { get; set; }
 
+        public bool IsInWorkMode
+        {
+            get
+            {
+                return Pomodoro.Mode == PomodoroMode.Work;
+            }
+        }
+
+        public bool IsInBreakMode
+        {
+            get
+            {
+                return Pomodoro.Mode == PomodoroMode.Break;
+            }
+        }
+
         public TimerViewModel()
         {
             CurrentSession = new PomodoroSession();
 
-            timerService = new TimerService(500);
-            Display = timerService.TimeString();
+            Pomodoro = new Pomodoro(10, 5);
+            Display = Pomodoro.TimeString();
 
-            timerService.IntervalComplete += OnIntervalComplete;
-            timerService.StateChanged += OnTimerStateChanged;
-            timerService.TimerComplete += OnTimerComplete;
+            Pomodoro.IntervalComplete += OnIntervalComplete;
+            Pomodoro.StateChanged += OnTimerStateChanged;
+            Pomodoro.ModeChanged += OnPomodoroChanged;
 
-            ToggleStartCommand = new JFCommand<TimerViewModel>((vm) => true, (vm) => { ToggleTimer(); });
-            CancelTimerCommand = new JFCommand<TimerViewModel>(
-                (vm) => timerService.State != TimerServiceState.Stopped,
-                (vm) => { StopTimer(); }
+            ToggleStartCommand = new JFCommand(
+                _ => true,
+                _ => { ToggleTimer(); }
+                );
+
+            CancelTimerCommand = new JFCommand(
+                _ => Pomodoro.State != TimerServiceState.Stopped,
+                _ => { StopTimer(); }
                 );
         }
 
         public void ToggleTimer()
         {
-            if (timerService.State != TimerServiceState.Running)
+            if (Pomodoro.State != TimerServiceState.Running)
             {
-                timerService.StartTimer();
+                Pomodoro.StartTimer();
             }
             else
             {
-                timerService.PauseTimer();
+                Pomodoro.PauseTimer();
             }
         }
 
         public void StopTimer()
         {
-            timerService.StopTimer();
+            Pomodoro.StopTimer();
         }
 
         public void OnIntervalComplete(object sender, TimerEventArgs e)
@@ -103,7 +125,7 @@ namespace PomodoroUWP.ViewModels
 
         public void OnTimerStateChanged(object sender, TimerEventArgs e)
         {
-            switch (timerService.State)
+            switch (Pomodoro.State)
             {
                 case TimerServiceState.Stopped:
                     CommandLabel = "Start";
@@ -118,17 +140,39 @@ namespace PomodoroUWP.ViewModels
                     break;
             }
 
-            Display = timerService.TimeString();
-            Progress = timerService.Progress;
+            Display = Pomodoro.TimeString();
+            Progress = Pomodoro.Progress;
 
-            ((JFCommand<TimerViewModel>)CancelTimerCommand).RaiseCanExecuteChanged();
+            ((JFCommand)CancelTimerCommand).RaiseCanExecuteChanged();
         }
 
         private void OnTimerComplete(object sender, TimerEventArgs e)
         {
             // Should save the pomodoro session to some sort of 
             // data persistance
-            throw new NotImplementedException();
+
+            SavePomodoroSessionAsync();
+        }
+
+        private async void SavePomodoroSessionAsync()
+        {
+            StorageFile file = await GetSaveFileAsync();
+
+            // TODO: Serialize Pomodoro here.
+            await FileIO.AppendTextAsync(file, CurrentSession.Serialize());
+        }
+
+        public static async Task<StorageFile> GetSaveFileAsync()
+        {
+            StorageFolder localFolder = ApplicationData.Current.LocalFolder;
+            return await localFolder.CreateFileAsync("data.csv", CreationCollisionOption.OpenIfExists);
+        }
+
+        private void OnPomodoroChanged(object sender, PomodoroEventArgs e)
+        {
+            // let whatever UI know that we are in different mode
+            OnPropertyChanged("IsInWorkMode");
+            OnPropertyChanged("IsInBreakMode");
         }
 
         #region INotifyPropertyChanged
