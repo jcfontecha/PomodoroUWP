@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
+using PomodoroUWP;
 using PomodoroUWP.Models;
 using PomodoroUWP.ViewModels;
 using System;
@@ -23,6 +24,20 @@ namespace PomodoroUnitTests
         {
             var helper = CreateHelper();
             Task.Run(() => helper.SavePomodoroToFileAsync());
+        }
+
+        [TestMethod]
+        public void ParseSimpleCSV_ParseSuccessful()
+        {
+            var helper = CreateHelper();
+            Task.Run(() => helper.ParseSimpleCSVAsync());
+        }
+
+        [TestMethod]
+        public void ParseCSV_ParseSuccessful()
+        {
+            var helper = CreateHelper();
+            Task.Run(() => helper.ParseCSVAsync());
         }
     }
 
@@ -55,6 +70,34 @@ namespace PomodoroUnitTests
             string expected = "TEST," + DateTime.Today.ToString() + ",1500";
 
             Assert.AreEqual(expected, content);
+        }
+
+        public async void ParseSimpleCSVAsync()
+        {
+            CsvParser parser = new CsvParser();
+            string text = "Column1,Column2\nJuan,Fer";
+
+            parser.RawText = text;
+
+            var data = await parser.Parse();
+
+            var dataAsList = data.ToList();
+
+            Assert.AreEqual(dataAsList.ElementAt(0)["Column1"], "Juan");
+        }
+
+        public async void ParseCSVAsync()
+        {
+            CsvParser parser = new CsvParser();
+            string text = "Column1,Column2\n\"Hola, Juan\",Fer";
+
+            parser.RawText = text;
+
+            var data = await parser.Parse();
+
+            var dataAsList = data.ToList();
+
+            Assert.AreEqual(dataAsList.ElementAt(0)["Column1"], "Hola, Juan");
         }
     }
 }

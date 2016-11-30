@@ -5,11 +5,11 @@
   xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
   IgnorableNamespaces="uap mp">
 
-  <Identity Name="542000e4-0ec8-4871-a8d9-66e0f7d8f4db"
+  <Identity Name="6aea5e9d-1cd6-441d-b455-3e2b80ee741c"
             Publisher="CN=Fontecha"
             Version="1.0.0.0" />
 
-  <mp:PhoneIdentity PhoneProductId="542000e4-0ec8-4871-a8d9-66e0f7d8f4db" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+  <mp:PhoneIdentity PhoneProductId="6aea5e9d-1cd6-441d-b455-3e2b80ee741c" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
     <DisplayName>PomodoroUnitTests</DisplayName>

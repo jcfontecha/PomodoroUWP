@@ -80,6 +80,11 @@ namespace PomodoroUWP
 
         }
 
+        public CsvParser()
+        {
+            InitializeFields();
+        }
+
         #endregion
 
         #region Private Methods
@@ -90,6 +95,8 @@ namespace PomodoroUWP
             this.HasHeaderRow = true;
             this.RawText = string.Empty;
             this.Quote = DEFAULT_QUOTE;
+
+            this.ParserEngine = new DefaultParserEngine();
         }
 
         private async Task<List<Dictionary<string, string>>> ParseRows(List<string> fieldList)

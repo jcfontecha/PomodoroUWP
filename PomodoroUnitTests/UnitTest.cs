@@ -1,6 +1,5 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
-using PomodoroUWP.ViewModels;
 
 namespace PomodoroUnitTests
 {
@@ -10,7 +9,6 @@ namespace PomodoroUnitTests
         [TestMethod]
         public void TestMethod1()
         {
-            
         }
     }
 }
