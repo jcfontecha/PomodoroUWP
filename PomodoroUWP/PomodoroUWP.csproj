@@ -102,6 +102,7 @@
     <Compile Include="CsvParser.cs" />
     <Compile Include="DefaultParserEngine.cs" />
     <Compile Include="IParserEngine.cs" />
+    <Compile Include="IPomodoroSerializer.cs" />
     <Compile Include="Models\Pomodoro.cs" />
     <Compile Include="Models\PomodoroSession.cs" />
     <Compile Include="NavMenuItem.cs" />

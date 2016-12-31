@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PomodoroUWP;
 
 namespace PomodoroUWP.Models
 {
@@ -51,6 +52,13 @@ namespace PomodoroUWP.Models
             }
         }
 
+        public PomodoroSession() { }
+
+        public PomodoroSession(Dictionary<string, string> values)
+        {
+            Deserialize(values);
+        }
+
         public string Serialize()
         {
             string result = "";
@@ -60,6 +68,15 @@ namespace PomodoroUWP.Models
             result += Duration.ToString();
 
             return result;
+        }
+
+        public void Deserialize(IDictionary<string, string> values)
+        {
+            Title = values["Title"];
+            DateTime newDate;
+            DateTime.TryParse(values["Date"], out newDate);
+            Date = newDate;
+            Duration = int.Parse(values["Duration"]);
         }
 
         #region INotifyPropertyChanged

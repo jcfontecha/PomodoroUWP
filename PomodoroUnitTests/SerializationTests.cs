@@ -43,12 +43,6 @@ namespace PomodoroUnitTests
 
     public class SerializationTestsHelper
     {
-        private TimerViewModel CreateViewModelForTests()
-        {
-            TimerViewModel vm = new TimerViewModel();
-            return vm;
-        }
-
         private PomodoroSession CreatePomodoroSessionForTests()
         {
             PomodoroSession session = new PomodoroSession();
@@ -80,7 +74,6 @@ namespace PomodoroUnitTests
             parser.RawText = text;
 
             var data = await parser.Parse();
-
             var dataAsList = data.ToList();
 
             Assert.AreEqual(dataAsList.ElementAt(0)["Column1"], "Juan");
@@ -94,7 +87,6 @@ namespace PomodoroUnitTests
             parser.RawText = text;
 
             var data = await parser.Parse();
-
             var dataAsList = data.ToList();
 
             Assert.AreEqual(dataAsList.ElementAt(0)["Column1"], "Hola, Juan");

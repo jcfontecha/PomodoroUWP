@@ -114,7 +114,7 @@ namespace PomodoroUWP.ViewModels
 
         public void StopTimer()
         {
-            Pomodoro.StopTimer();
+            Pomodoro.ResetTimer();
         }
 
         public void OnIntervalComplete(object sender, TimerEventArgs e)
