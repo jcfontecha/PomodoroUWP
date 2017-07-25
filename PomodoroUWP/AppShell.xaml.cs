@@ -31,19 +31,6 @@ namespace PomodoroUWP
                     Label = "Page1",
                     DestinationPage = typeof(Views.MainPage)
                 },
-                new NavMenuItem()
-                {
-                    Symbol = Symbol.Edit,
-                    Label = "Page2",
-                    DestinationPage = typeof(Views.StatsPage)
-                },
-                new NavMenuItem()
-                {
-                    Symbol = Symbol.Link,
-                    Label = "Download Source Code",
-                    DestinationPage = typeof(Uri),
-                    Arguments = "http://scottge.net/product/uwp-windows-10-sample-navigation-panes",
-                }
             });
 
         public static AppShell Current = null;
